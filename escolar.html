@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escolar/Universitario - ayb.libreria</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- ✅ Cargar jsPDF primero -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Verificar que se cargó correctamente
+    console.log('jsPDF cargado:', typeof window.jspdf !== 'undefined');
+  </script>
+  
+  <!-- ✅ Cargar carrito.js (manejará todo el carrito) -->
+  <script src="carrito.js" defer></script>
+  
+  
+</head>
+<body>
+  <!-- 🔷 HEADER PRINCIPAL -->
+  <header class="ayb-header-principal">
+    <div class="logo">
+      <img src="assets/logo que diga AyB, e.png" alt="Logo ayb.libreria">
+    </div>
+
+    <nav class="ayb-nav-principal">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="libreria.html">Librería</a></li>
+        <li><a href="papeleria.html">Papelería</a></li>
+        <li><a href="pizarras.html">Pizarras</a></li>
+        <li><a href="escolar.html" class="active">Escolar/Universitario</a></li>
+        <li><a href="artistica.html">Artística</a></li>
+        <li><a href="goma-eva.html">Goma Eva</a></li>
+      </ul>
+    </nav>
+
+    <div class="ayb-social-cart">
+      <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
+      <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
+      <a href="#" onclick="mostrarCarrito()"><img src="cart-icon.png" alt="Carrito"></a>
+      <span id="contadorCarrito" class="contador-carrito">0</span>
+    </div>
+  </header>
+
+  <!-- 🔹 MENÚ SECUNDARIO -->
+  <nav class="ayb-menu-secundario">
+    <ul>
+      <li><a href="#lapices">Lápices</a></li>
+      <li><a href="#gomas">Gomas</a></li>
+      <li><a href="#correctores">Correctores</a></li>
+      <li><a href="#reglas">Reglas</a></li>
+      <li><a href="#adhesivos">Adhesivos</a></li>
+      <li><a href="#cuadernos">Cuadernos</a></li>
+      <li><a href="#lapiceras">Lapiceras</a></li>
+      <li><a href="#sacapuntas">Sacapuntas</a></li>
+      <li><a href="#taco-color">Taco Color</a></li>
+      <li><a href="#folios">Folios</a></li>
+    </ul>
+  </nav>
+
+  <!-- 🎯 BANNER DE ESCOLAR/UNIVERSITARIO -->
+  <section class="banner-principal">
+    <img src="assets/banner-escolar.jpg" alt="Escolar/Universitario - Materiales educativos">
+  </section>
+
+  <!-- 📦 SECCIÓN DE SUBCATEGORÍAS -->
+  <main class="categoria-container">
+    <!-- Lápices -->
+    <section id="lapices" class="carrusel-bloque">
+      <h3>✏️ Lápices</h3>
+      <div id="carrusel-lapices" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Gomas -->
+    <section id="gomas" class="carrusel-bloque">
+      <h3>🧼 Gomas de Borrar</h3>
+      <div id="carrusel-gomas" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Correctores -->
+    <section id="correctores" class="carrusel-bloque">
+      <h3>🖊️ Correctores</h3>
+      <div id="carrusel-correctores" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Reglas -->
+    <section id="reglas" class="carrusel-bloque">
+      <h3>📏 Reglas</h3>
+      <div id="carrusel-reglas" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Adhesivos -->
+    <section id="adhesivos" class="carrusel-bloque">
+      <h3>🧴 Adhesivos</h3>
+      <div id="carrusel-adhesivos" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Cuadernos -->
+    <section id="cuadernos" class="carrusel-bloque">
+      <h3>📓 Cuadernos</h3>
+      <div id="carrusel-cuadernos" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Lapiceras -->
+    <section id="lapiceras" class="carrusel-bloque">
+      <h3>🖋️ Lapiceras</h3>
+      <div id="carrusel-lapiceras" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Sacapuntas -->
+    <section id="sacapuntas" class="carrusel-bloque">
+      <h3>✂️ Sacapuntas</h3>
+      <div id="carrusel-sacapuntas" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Taco Color -->
+    <section id="taco-color" class="carrusel-bloque">
+      <h3>🎨 Taco Color</h3>
+      <div id="carrusel-taco-color" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Folios -->
+    <section id="folios" class="carrusel-bloque">
+      <h3>📂 Folios</h3>
+      <div id="carrusel-folios" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal del carrito (debe estar en cada página) -->
+  <div id="carritoModal" class="carrito-modal oculto" onclick="if(event.target===this) cerrarCarrito()">
+    <div class="carrito-contenido">
+      <h3>🛒 Tu Carrito de Compras</h3>
+      <div id="carritoContenido"></div>
+      <div id="carritoTotal"></div>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button onclick="cerrarCarrito()">Seguir Comprando</button>
+        <button onclick="generarPDFPedido()" style="background-color: #28a745;">
+          📄 Descargar Pedido
+        </button>
+      </div>
+      <button onclick="cerrarCarrito()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">×</button>
+    </div>
+  </div>
+
+  <!-- 📞 FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p><strong>AyB libreria</strong> © 2025</p>
+      <p>📞 (011) 1234-5678 | ✉️ contacto@ayblibreria.com</p>
+      <p>🕒 Lunes a viernes de 9 a 18 hs</p>
+    </div>
+  </footer>
+
+  <!-- 📦 SCRIPTS (SOLO CARGA DE PRODUCTOS) -->
+  <script type="module">
+    import { app } from './firebase-config.js';
+    import { 
+      getFirestore, collection, getDocs 
+    } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js';
+
+    const db = getFirestore(app);
+    
+    // Subcategorías de escolar/universitario
+    const SUBCATEGORIAS_ESCOLAR = [
+      "lápices", "gomas", "correctores", "reglas", 
+      "adhesivos", "cuadernos", "lapiceras", 
+      "sacapuntas", "taco color", "folios"
+    ];
+
+    // Cargar productos de escolar/universitario
+    async function cargarProductosEscolar() {
+      try {
+        const snapshot = await getDocs(collection(db, "productos"));
+        const productos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Filtrar y mostrar productos por subcategoría
+        SUBCATEGORIAS_ESCOLAR.forEach(subcategoria => {
+          const idCarrusel = `carrusel-${subcategoria.replace(/\s/g, "-").toLowerCase()}`;
+          const contenedor = document.getElementById(idCarrusel);
+          
+          if (contenedor) {
+            const productosFiltrados = productos.filter(p => 
+              p.categorias && p.categorias.includes(subcategoria)
+            );
+            
+            if (productosFiltrados.length > 0) {
+              contenedor.innerHTML = productosFiltrados.map(producto => `
+                <div class="producto-card">
+                  <img src="${producto.imagen}" alt="${producto.nombre}">
+                  <div class="info-producto">
+                    <h4>${producto.nombre}</h4>
+                    
+                    <div class="precios-container">
+                      <div class="precio-minorista">
+                        <span class="etiqueta-precio">💲 Unitario:</span>
+                        <span class="precio-valor">$${producto.precio}</span>
+                      </div>
+                      
+                      ${producto.precioMayorista ? `
+                        <div class="precio-mayorista">
+                          <span class="etiqueta-precio">🏪 Mayorista:</span>
+                          <span class="precio-valor">$${producto.precioMayorista}</span>
+                          <span class="cantidad-minima">(Mínimo ${producto.cantidadMinimaMayorista || 10} unidades)</span>
+                        </div>
+                        <div class="ahorro-mayorista">
+                          ⚡ Ahorras: $${(producto.precio - producto.precioMayorista).toFixed(2)} por unidad
+                        </div>
+                        <div class="info-mayorista">
+                          💡 Llevando ${producto.cantidadMinimaMayorista || 10} unidades o más, 
+                          el precio por unidad baja a $${producto.precioMayorista}
+                        </div>
+                      ` : ''}
+                    </div>
+                    
+                    ${producto.hayStock ? `
+                      <input type="number" min="1" value="1" class="cantidad-producto" 
+                             data-id="${producto.id}" 
+                             onchange="actualizarPrecio(this, ${producto.precio}, ${producto.precioMayorista || 'null'}, ${producto.cantidadMinimaMayorista || 10})">
+                      <button class="btn-carrito" 
+                              data-id="${producto.id}" 
+                              data-nombre="${producto.nombre}" 
+                              data-precio="${producto.precio}"
+                              data-precio-mayorista="${producto.precioMayorista || ''}"
+                              data-cantidad-minima="${producto.cantidadMinimaMayorista || ''}">
+                        Agregar al carrito
+                      </button>
+                    ` : `<p class="sin-stock">Sin stock</p>`}
+                  </div>
+                </div>
+              `).join('');
+            } else {
+              contenedor.innerHTML = `<p class="sin-productos">Próximamente más productos en ${subcategoria}</p>`;
+            }
+          }
+        });
+        
+        // Agregar event listeners a los botones del carrito
+        agregarEventListenersCarrito();
+        
+      } catch (error) {
+        console.error("Error al cargar productos:", error);
+      }
+    }
+
+    // Función para actualizar visualización de precio según cantidad
+    function actualizarPrecio(input, precioMinorista, precioMayorista, cantidadMinima) {
+      if (!precioMayorista) return;
+      
+      const cantidad = parseInt(input.value);
+      const contenedorPrecio = input.closest('.info-producto').querySelector('.precios-container');
+      const mensajeMayorista = contenedorPrecio.querySelector('.info-mayorista');
+      
+      if (cantidad >= cantidadMinima && mensajeMayorista) {
+        mensajeMayorista.style.display = 'block';
+        mensajeMayorista.innerHTML = `✅ ¡Perfecto! Estás comprando al precio mayorista: $${precioMayorista} por unidad`;
+        mensajeMayorista.style.backgroundColor = '#e8f5e8';
+        mensajeMayorista.style.borderLeftColor = '#28a745';
+      } else if (mensajeMayorista) {
+        mensajeMayorista.style.display = 'block';
+        mensajeMayorista.innerHTML = `💡 Llevando ${cantidadMinima} unidades o más, el precio por unidad baja a $${precioMayorista}`;
+        mensajeMayorista.style.backgroundColor = '#f8f9fa';
+        mensajeMayorista.style.borderLeftColor = '#27ae60';
+      }
+    }
+
+    // Función para agregar event listeners a los botones del carrito
+    function agregarEventListenersCarrito() {
+      document.querySelectorAll('.btn-carrito').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = this.dataset.id;
+          const nombre = this.dataset.nombre;
+          const precio = parseFloat(this.dataset.precio);
+          const precioMayorista = this.dataset.precioMayorista ? parseFloat(this.dataset.precioMayorista) : null;
+          const cantidadMinima = this.dataset.cantidadMinima ? parseInt(this.dataset.cantidadMinima) : null;
+          
+          const cantidadInput = document.querySelector(`.cantidad-producto[data-id="${id}"]`);
+          const cantidad = cantidadInput ? parseInt(cantidadInput.value) : 1;
+          
+          // Determinar qué precio usar según la cantidad
+          let precioFinal = precio;
+          if (precioMayorista && cantidadMinima && cantidad >= cantidadMinima) {
+            precioFinal = precioMayorista;
+          }
+          
+          // Agregar al carrito
+          agregarAlCarrito({
+            id,
+            nombre,
+            precio: precioFinal,
+            cantidad,
+            precioUnitarioOriginal: precio,
+            precioMayorista,
+            cantidadMinimaMayorista: cantidadMinima
+          });
+        });
+      });
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', cargarProductosEscolar);
+  </script>
+</body>
+</html>

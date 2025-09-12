@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administración - ayb.libreria</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- ✅ Script de verificación de sesión -->
+  <script>
+    // Verificación INMEDIATA al cargar admin.html
+    (function() {
+      const sessionData = JSON.parse(localStorage.getItem("session") || "{}");
+      const ahora = Date.now();
+      const tiempoExpiracion = 2 * 60 * 60 * 1000; // 2 horas
+      
+      if (!sessionData.logueado || (ahora - sessionData.timestamp) > tiempoExpiracion) {
+        localStorage.removeItem("session");
+        alert("Sesión expirada o inválida. Redirigiendo al login.");
+        window.location.href = "login.html";
+      }
+    })();
+  </script>
+
+  <style>
+    /* Estilos específicos para el admin */
+    .admin-panel {
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .admin-header {
+      background: linear-gradient(135deg, #401A5B 0%, #2F1242 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .admin-header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .admin-header p {
+      margin: 0.5rem 0 0 0;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body class="admin-panel">
+
+  <!-- 🧭 Header Mejorado -->
+  <header class="admin-header">
+    <div class="logo">
+      <img src="assets/logoLibreria.jpeg" alt="Logo ayb.libreria" style="height: 60px; width: 60px; border-radius: 50%; border: 3px solid white;">
+    </div>
+
+    <nav style="margin-top: 1rem;">
+      <ul style="display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0;">
+        <li><a href="index.html" style="color: white; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 6px;">← Volver al Inicio</a></li>
+        <li><a href="#" id="cerrarSesion" style="color: white; text-decoration: none; padding: 0.5rem 1rem; background: #dc3545; border-radius: 6px;">Cerrar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="formulario-producto">
+    <h2 style="color: #401A5B; margin-bottom: 1.5rem;">➕ Agregar Nuevo Producto</h2>
+    
+    <form id="productoForm" class="form-admin">
+      <input type="hidden" id="productId" />
+
+      <div class="form-group">
+        <label for="nombre">Nombre del Producto *</label>
+        <input type="text" id="nombre" placeholder="Ej: Cuaderno A4 100 hojas" required />
+      </div>
+
+      <div class="form-group">
+        <label for="precio">Precio Minorista ($) *</label>
+        <input type="number" id="precio" placeholder="0.00" step="0.01" min="0" required />
+      </div>
+
+    <div class="form-group">
+  <label for="imagen">Imagen del Producto *</label>
+  <input type="file" id="imagen" accept="image/*" />
+  <small id="imagen-texto-ayuda">
+    Formatos: JPG, PNG, WebP. Máx. 5MB. 
+    <span style="color: #28a745;">✓ Opcional al editar</span>
+  </small>
+  <div id="vista-previa" style="margin-top: 10px; display: none;">
+    <img id="vista-previa-img" style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 2px solid #ddd;">
+    <div style="margin-top: 5px; font-size: 12px; color: #666;">
+      <span id="texto-estado-imagen">Imagen actual</span>
+    </div>
+  </div>
+</div>
+
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="hayStock" checked />
+          <span class="checkmark"></span>
+          ✅ Producto disponible en stock
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label" for="habilitarMayorista">
+          <input type="checkbox" id="habilitarMayorista" onchange="togglePrecioMayorista()" />
+          <span class="checkmark"></span>
+          🏪 Habilitar precio mayorista (opcional)
+        </label>
+      </div>
+
+      <div id="campoPrecioMayorista" class="mayorista-group" style="display: none;">
+        <div class="form-group">
+          <label for="precioMayorista">Precio Mayorista ($) *</label>
+          <input type="number" id="precioMayorista" placeholder="0.00" step="0.01" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="cantidadMinimaMayorista">Cantidad Mínima Mayorista *</label>
+          <input type="number" id="cantidadMinimaMayorista" placeholder="Ej: 10" min="2" />
+          <small>Mínimo 2 unidades para precio mayorista</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="button" id="btnToggleCategorias" class="btn-categorias">
+          📁 Seleccionar Categorías *
+        </button>
+        <div id="categorias-seleccionadas" class="categorias-seleccionadas"></div>
+        <small>Selecciona al menos una categoría</small>
+      </div>
+
+      <select id="categorias" name="categorias" multiple hidden></select>
+
+      <button id="submitBtn" type="submit" class="btn-primary">
+        <span id="submitText">Agregar Producto</span>
+        <div class="loading-spinner" id="loadingSpinner" style="display: none;"></div>
+      </button>
+    </form>
+  </div>
+
+  <div class="filtros-admin">
+    <h3>🔍 Filtrar Productos</h3>
+    <div class="filtro-categorias">
+      <label for="filtroCategoria">Filtrar por categoría:</label>
+      <select id="filtroCategoria">
+        <option value="todas">Todas las categorías</option>
+        <option value="libreria">Librería</option>
+        <option value="papeleria">Papelería</option>
+        <option value="pizarras">Pizarras</option>
+        <option value="escolar">Escolar/Universitario</option>
+        <option value="artistica">Artística</option>
+        <option value="goma-eva">Goma Eva</option>
+      </select>
+    </div>
+    
+    <div class="filtro-subcategorias">
+      <label for="filtroSubcategoria">Filtrar por subcategoría:</label>
+      <select id="filtroSubcategoria">
+        <option value="todas">Todas las subcategorías</option>
+      </select>
+    </div>
+    
+    <div class="filtro-stock">
+      <label for="filtroStock">Filtrar por stock:</label>
+      <select id="filtroStock">
+        <option value="todos">Todos los productos</option>
+        <option value="conStock">Con stock disponible</option>
+        <option value="sinStock">Sin stock</option>
+      </select>
+    </div>
+    
+    <button id="btnAplicarFiltros" class="btn-filtrar">Aplicar Filtros</button>
+    <button id="btnLimpiarFiltros" class="btn-limpiar">Limpiar Filtros</button>
+  </div>
+
+  <div id="productosContainer">
+    <p style="text-align: center; padding: 20px; color: #666;">
+      Cargando productos...
+    </p>
+  </div>
+
+  <!-- Modal de categorías -->
+  <div id="modalCategorias" class="modal-overlay hidden">
+    <div class="modal-content">
+      <h3>📂 Seleccioná las categorías</h3>
+      
+      <div id="categoriasGrid" class="categorias-grid"></div>
+
+      <div class="modal-actions">
+        <button type="button" id="confirmCategorias" class="btn-confirm">✅ Confirmar</button>
+        <button type="button" id="cancelCategorias" class="btn-cancel">❌ Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Cargar main.js como módulo -->
+  <script type="module" src="main.js"></script>
+  
+  <!-- ✅ Scripts de funcionalidad -->
+  <script>
+    // Función para toggle de precio mayorista
+    function togglePrecioMayorista() {
+      const checkbox = document.getElementById('habilitarMayorista');
+      const campo = document.getElementById('campoPrecioMayorista');
+      campo.style.display = checkbox.checked ? 'block' : 'none';
+      
+      // Limpiar campos si se desactiva
+      if (!checkbox.checked) {
+        document.getElementById('precioMayorista').value = '';
+        document.getElementById('cantidadMinimaMayorista').value = '';
+      }
+    }
+
+    // Función para actualizar categorías seleccionadas
+    function actualizarCategoriasSeleccionadas() {
+      const select = document.getElementById('categorias');
+      const contenedor = document.getElementById('categorias-seleccionadas');
+      const seleccionadas = Array.from(select.selectedOptions);
+      
+      contenedor.innerHTML = seleccionadas.map(opt => 
+        `<span class="categoria-tag">${opt.text}</span>`
+      ).join('');
+    }
+
+    // Inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+      const categoriasSelect = document.getElementById('categorias');
+      if (categoriasSelect) {
+        categoriasSelect.addEventListener('change', actualizarCategoriasSeleccionadas);
+      }
+      
+      // Configurar el modal de categorías
+      const btnToggle = document.getElementById('btnToggleCategorias');
+      if (btnToggle) {
+        btnToggle.addEventListener('click', function() {
+          // Tu código existente para abrir el modal
+          if (typeof renderCategoriasGrid === 'function') {
+            renderCategoriasGrid();
+          }
+          const modal = document.getElementById('modalCategorias');
+          if (modal) modal.classList.remove('hidden');
+        });
+      }
+
+      // Configurar cierre de sesión
+      const cerrarSesion = document.getElementById('cerrarSesion');
+      if (cerrarSesion) {
+        cerrarSesion.addEventListener('click', function(e) {
+          e.preventDefault();
+          localStorage.removeItem('session');
+          window.location.href = 'login.html';
+        });
+      }
+    });
+
+    // Verificación después de 3 segundos (tiempo para cargar main.js)
+    setTimeout(() => {
+      console.log("=== 🔍 DIAGNÓSTICO ADMIN PANEL ===");
+      
+      // Verificar si main.js cargó correctamente
+      if (typeof app === 'undefined') {
+        console.log("❌ Firebase NO inicializado - Revisar main.js");
+      } else {
+        console.log("✅ Firebase inicializado correctamente");
+      }
+      
+      // Verificar productos
+      const productos = document.querySelectorAll('.producto-card');
+      console.log(`📦 Productos renderizados: ${productos.length}`);
+    }, 3000);
+
+    // Función para diagnóstico desde consola
+    window.verificarProductosFirebase = async function() {
+      if (typeof db === 'undefined') {
+        console.log("❌ Firestore no disponible");
+        return;
+      }
+      
+      try {
+        const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js");
+        const snapshot = await getDocs(collection(db, "productos"));
+        console.log(`📊 Productos en Firestore: ${snapshot.size}`);
+        
+        if (snapshot.size > 0) {
+          snapshot.forEach(doc => {
+            console.log(`➡️ ${doc.id}: ${doc.data().nombre} - $${doc.data().precio}`);
+          });
+        }
+      } catch (error) {
+        console.error("❌ Error al acceder a Firestore:", error);
+      }
+    };
+  </script>
+
+  
+
+  <script>
+  // Vista previa de imagen
+  document.getElementById('imagen').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const vistaPrevia = document.getElementById('vista-previa');
+    const vistaPreviaImg = document.getElementById('vista-previa-img');
+    
+    if (file) {
+      // Validar tamaño (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. Máximo 2MB permitido.');
+        this.value = '';
+        vistaPrevia.style.display = 'none';
+        return;
+      }
+      
+      // Validar tipo de archivo
+      const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!tiposPermitidos.includes(file.type)) {
+        alert('Formato de imagen no válido. Use JPG, PNG o WebP.');
+        this.value = '';
+        vistaPrevia.style.display = 'none';
+        return;
+      }
+      
+      // Mostrar vista previa
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        vistaPreviaImg.src = e.target.result;
+        vistaPrevia.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    } else {
+      vistaPrevia.style.display = 'none';
+    }
+  });
+ 
+  // Limpiar vista previa al resetear formulario
+  document.getElementById('productoForm').addEventListener('reset', function() {
+    document.getElementById('vista-previa').style.display = 'none';
+    document.getElementById('imagen').value = '';
+  });
+</script>
+</body>
+</html>

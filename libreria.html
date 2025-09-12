@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Librería | Tu Tienda</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <script src="carrito.js" defer></script>
+</head>
+<body>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+  <!-- 🔷 Header principal con logo y redes -->
+  <header class="ayb-header-principal">
+    <div class="logo">
+      <img src="assets/logo que diga AyB, e.png" alt="Logo de la tienda">
+      <h1>Tu Tienda</h1>
+    </div>
+
+  <!-- Icono del carrito -->
+<div class="carrito-icono" onclick="mostrarCarrito()">
+  <span class="emoji-carrito">🛒</span>
+  <span id="contadorCarrito">0</span>
+</div>
+
+<!-- Modal del carrito (debe estar en cada página) -->
+<div id="carritoModal" class="carrito-modal oculto" onclick="if(event.target===this) cerrarCarrito()">
+  <div class="carrito-contenido">
+    <h3>🛒 Tu Carrito de Compras</h3>
+    <div id="carritoContenido"></div>
+    <div id="carritoTotal"></div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button onclick="cerrarCarrito()">Seguir Comprando</button>
+      <button onclick="generarPDFPedido()" style="background-color: #28a745;">
+        📄 Descargar Pedido
+      </button>
+    </div>
+    <button onclick="cerrarCarrito()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">×</button>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+  </header>
+
+  <!-- 🔹 Menú secundario debajo del header -->
+  <nav class="ayb-menu-secundario">
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+
+      <li>
+        <a href="libreria.html">Librería</a>
+        <ul class="submenu">
+          <li><a href="libreria.html#lapices">Lápices</a></li>
+          <li><a href="libreria.html#cuadernos">Cuadernos</a></li>
+          <li><a href="libreria.html#correctores">Correctores</a></li>
+          <li><a href="libreria.html#fibras">Fibras</a></li>
+          <li><a href="libreria.html#marcadores-pizarra">Marcadores de pizarra</a></li>
+          <li><a href="libreria.html#folios">Folios</a></li>
+        </ul>
+      </li>
+
+      <!-- 🔹 PAPELERÍA -->
+    <li class="dropdown">
+      <a href="papeleria.html">Papelería</a>
+      <ul class="submenu">
+        <li><a href="papeleria.html#resmas">Resmas</a></li>
+        <li><a href="papeleria.html#cintas">Cintas</a></li>
+        <li><a href="papeleria.html#candybar">Bolsitas candybar</a></li>
+        <li><a href="papeleria.html#cartulinas">Cartulinas</a></li>
+        <li><a href="papeleria.html#crepe">Papel crepe</a></li>
+        <li><a href="papeleria.html#fotografico">Papel fotográfico</a></li>
+        <li><a href="papeleria.html#seda">Papel seda/Barrilete</a></li>
+        <li><a href="papeleria.html#notas-color">Notas color</a></li>
+        <li><a href="papeleria.html#folios">Folios</a></li>
+      </ul>
+
+
+    </li>
+      <!-- 🔹 PIZARRAS -->
+    <li class="dropdown">
+      <a href="pizarras.html">Pizarras</a>
+      <ul class="submenu">
+        <li><a href="pizarras.html#pizarras">Pizarras</a></li>
+        <li><a href="pizarras.html#borradores">Borradores</a></li>
+        <li><a href="pizarras.html#marcadores">Marcadores de pizarra</a></li>
+      </ul>
+    </li>
+
+    <!-- 🔹 ESCOLAR / UNIVERSITARIO -->
+    <li class="dropdown">
+      <a href="escolar.html">Escolar / Universitario</a>
+      <ul class="submenu">
+        <li><a href="escolar.html#lapices">Lápices</a></li>
+        <li><a href="escolar.html#gomas">Gomas</a></li>
+        <li><a href="escolar.html#correctores">Correctores</a></li>
+        <li><a href="escolar.html#reglas">Reglas</a></li>
+        <li><a href="escolar.html#adhesivos">Adhesivos</a></li>
+        <li><a href="escolar.html#cuadernos">Cuadernos</a></li>
+        <li><a href="escolar.html#lapiceras">Lapiceras</a></li>
+        <li><a href="escolar.html#sacapuntas">Sacapuntas</a></li>
+        <li><a href="escolar.html#notas-color">Notas color</a></li>
+        <li><a href="escolar.html#folios">Folios</a></li>
+      </ul>
+    </li>
+          <!-- 🔹 ARTÍSTICA -->
+    <li class="dropdown">
+      <a href="artistica.html">Artística</a>
+      <ul class="submenu">
+        <li><a href="artistica.html#goma-eva">Goma eva</a></li>
+        <li><a href="artistica.html#acrilico">Acrílico</a></li>
+        <li><a href="artistica.html#pinceles">Pinceles</a></li>
+        <li><a href="artistica.html#vinilico">Adhesivo vinílico</a></li>
+        <li><a href="artistica.html#iman">Imán autoadhesivo</a></li>
+        <li><a href="artistica.html#multiuso">Pegamento multiuso</a></li>
+        <li><a href="artistica.html#silicona-barra">Silicona en barra</a></li>
+        <li><a href="artistica.html#silicona-liquida">Silicona líquida</a></li>
+        <li><a href="artistica.html#viruta">Viruta</a></li>
+      </ul>
+    </li>
+
+    <!-- 🔹 GOMA EVA -->
+    <li class="dropdown">
+      <a href="goma-eva.html">Goma Eva</a>
+      <ul class="submenu">
+        <li><a href="goma-eva.html#brillo">Goma eva brillo</a></li>
+        <li><a href="goma-eva.html#lisa">Goma eva lisa</a></li>
+        <li><a href="goma-eva.html#abecedarios">Abecedarios</a></li>
+      </ul>
+    </li>
+    </ul>
+  </nav>
+
+    <!-- sección dinámica de productos -->
+  <section id="productosLibreria" class="productos-libreria">
+  <h2>Productos de Librería</h2>
+
+  <div id="carrusel-lápices" class="carrusel-bloque">
+    <h3>Lápices</h3>
+    <div class="carrusel"></div>
+  </div>
+
+  <div id="carrusel-lapiceras" class="carrusel-bloque">
+    <h3>Lapiceras</h3>
+    <div class="carrusel"></div>
+  </div>
+
+  <div id="carrusel-cuadernos" class="carrusel-bloque">
+    <h3>Cuadernos</h3>
+    <div class="carrusel"></div>
+  </div>
+
+  <div id="carrusel-correctores" class="carrusel-bloque">
+    <h3>Correctores</h3>
+    <div class="carrusel"></div>
+  </div>
+
+  <div id="carrusel-fibras" class="carrusel-bloque">
+    <h3>Fibras</h3>
+    <div class="carrusel"></div>
+  </div>
+
+  <div id="carrusel-taco-color" class="carrusel-bloque">
+    <h3>Taco color</h3>
+    <div class="carrusel"></div>
+  </div>
+
+  <div id="carrusel-folios" class="carrusel-bloque">
+    <h3>Folios</h3>
+    <div class="carrusel"></div>
+  </div>
+</section>
+
+
+
+  </main>
+
+  <!-- 🔻 Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>Contacto: info@tutienda.com</p>
+      <p>Horarios: Lun a Vie de 9 a 18 hs</p>
+    </div>
+  </footer>
+
+
+  
+  <script type="module" src="public-libreria.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goma Eva - ayb.libreria</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- ✅ Cargar jsPDF primero -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Verificar que se cargó correctamente
+    console.log('jsPDF cargado:', typeof window.jspdf !== 'undefined');
+  </script>
+  
+  <!-- ✅ Cargar carrito.js (manejará todo el carrito) -->
+  <script src="carrito.js" defer></script>
+  
+  <style>
+    .carrusel-bloque {
+      margin: 3rem 0;
+      padding: 0 1rem;
+    }
+    
+    .carrusel-bloque h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid #007bff;
+      padding-left: 0.5rem;
+      color: #333;
+    }
+    
+    .carrusel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+    
+    /* Estilos para mostrar ambos precios */
+    .precios-container {
+      margin: 10px 0;
+    }
+    
+    .precio-minorista {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    
+    .precio-mayorista {
+      font-size: 1rem;
+      color: #27ae60;
+      margin-top: 5px;
+    }
+    
+    .cantidad-minima {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+      display: block;
+      margin-top: 3px;
+    }
+    
+    .ahorro-mayorista {
+      font-size: 0.9rem;
+      color: #e74c3c;
+      margin-top: 3px;
+      font-weight: 500;
+    }
+    
+    .etiqueta-precio {
+      font-weight: 600;
+      margin-right: 5px;
+    }
+    
+    .info-mayorista {
+      background-color: #f8f9fa;
+      border-left: 4px solid #27ae60;
+      padding: 8px 12px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔷 HEADER PRINCIPAL -->
+  <header class="ayb-header-principal">
+    <div class="logo">
+      <img src="assets/logo que diga AyB, e.png" alt="Logo ayb.libreria">
+    </div>
+
+    <nav class="ayb-nav-principal">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="libreria.html">Librería</a></li>
+        <li><a href="papeleria.html">Papelería</a></li>
+        <li><a href="pizarras.html">Pizarras</a></li>
+        <li><a href="escolar.html">Escolar/Universitario</a></li>
+        <li><a href="artistica.html">Artística</a></li>
+        <li><a href="goma-eva.html" class="active">Goma Eva</a></li>
+      </ul>
+    </nav>
+
+    <div class="ayb-social-cart">
+      <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
+      <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
+      <a href="#" onclick="mostrarCarrito()"><img src="cart-icon.png" alt="Carrito"></a>
+      <span id="contadorCarrito" class="contador-carrito">0</span>
+    </div>
+  </header>
+
+  <!-- 🔹 MENÚ SECUNDARIO -->
+  <nav class="ayb-menu-secundario">
+    <ul>
+      <li><a href="#goma-eva-brillo">Goma Eva Brillo</a></li>
+      <li><a href="#goma-eva-lisa">Goma Eva Lisa</a></li>
+      <li><a href="#abecedarios">Abecedarios</a></li>
+    </ul>
+  </nav>
+
+  <!-- 🎯 BANNER DE GOMA EVA -->
+  <section class="banner-principal">
+    <img src="assets/banner-goma-eva.jpg" alt="Goma Eva - Material para manualidades">
+  </section>
+
+  <!-- 📦 SECCIÓN DE SUBCATEGORÍAS -->
+  <main class="categoria-container">
+    <!-- Goma Eva Brillo -->
+    <section id="goma-eva-brillo" class="carrusel-bloque">
+      <h3>✨ Goma Eva Brillo</h3>
+      <div id="carrusel-goma-eva-brillo" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Goma Eva Lisa -->
+    <section id="goma-eva-lisa" class="carrusel-bloque">
+      <h3>📄 Goma Eva Lisa</h3>
+      <div id="carrusel-goma-eva-lisa" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+
+    <!-- Abecedarios -->
+    <section id="abecedarios" class="carrusel-bloque">
+      <h3>🔠 Abecedarios</h3>
+      <div id="carrusel-abecedarios" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal del carrito (debe estar en cada página) -->
+  <div id="carritoModal" class="carrito-modal oculto" onclick="if(event.target===this) cerrarCarrito()">
+    <div class="carrito-contenido">
+      <h3>🛒 Tu Carrito de Compras</h3>
+      <div id="carritoContenido"></div>
+      <div id="carritoTotal"></div>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button onclick="cerrarCarrito()">Seguir Comprando</button>
+        <button onclick="generarPDFPedido()" style="background-color: #28a745;">
+          📄 Descargar Pedido
+        </button>
+      </div>
+      <button onclick="cerrarCarrito()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">×</button>
+    </div>
+  </div>
+
+  <!-- 📞 FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p><strong>AyB libreria</strong> © 2025</p>
+      <p>📞 (011) 1234-5678 | ✉️ contacto@ayblibreria.com</p>
+      <p>🕒 Lunes a viernes de 9 a 18 hs</p>
+    </div>
+  </footer>
+
+  <!-- 📦 SCRIPTS (SOLO CARGA DE PRODUCTOS) -->
+  <script type="module">
+    import { app } from './firebase-config.js';
+    import { 
+      getFirestore, collection, getDocs 
+    } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js';
+
+    const db = getFirestore(app);
+    
+    // Subcategorías de goma eva
+    const SUBCATEGORIAS_GOMAEVA = [
+      "goma eva brillo", "goma eva lisa", "abecedarios"
+    ];
+
+    // Cargar productos de goma eva
+    async function cargarProductosGomaEva() {
+      try {
+        const snapshot = await getDocs(collection(db, "productos"));
+        const productos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Filtrar y mostrar productos por subcategoría
+        SUBCATEGORIAS_GOMAEVA.forEach(subcategoria => {
+          const idCarrusel = `carrusel-${subcategoria.replace(/\s/g, "-").toLowerCase()}`;
+          const contenedor = document.getElementById(idCarrusel);
+          
+          if (contenedor) {
+            const productosFiltrados = productos.filter(p => 
+              p.categorias && p.categorias.includes(subcategoria)
+            );
+            
+            if (productosFiltrados.length > 0) {
+              contenedor.innerHTML = productosFiltrados.map(producto => `
+                <div class="producto-card">
+                  <img src="${producto.imagen}" alt="${producto.nombre}">
+                  <div class="info-producto">
+                    <h4>${producto.nombre}</h4>
+                    
+                    <div class="precios-container">
+                      <div class="precio-minorista">
+                        <span class="etiqueta-precio">💲 Unitario:</span>
+                        <span class="precio-valor">$${producto.precio}</span>
+                      </div>
+                      
+                      ${producto.precioMayorista ? `
+                        <div class="precio-mayorista">
+                          <span class="etiqueta-precio">🏪 Mayorista:</span>
+                          <span class="precio-valor">$${producto.precioMayorista}</span>
+                          <span class="cantidad-minima">(Mínimo ${producto.cantidadMinimaMayorista || 10} unidades)</span>
+                        </div>
+                        <div class="ahorro-mayorista">
+                          ⚡ Ahorras: $${(producto.precio - producto.precioMayorista).toFixed(2)} por unidad
+                        </div>
+                        <div class="info-mayorista">
+                          💡 Llevando ${producto.cantidadMinimaMayorista || 10} unidades o más, 
+                          el precio por unidad baja a $${producto.precioMayorista}
+                        </div>
+                      ` : ''}
+                    </div>
+                    
+                    ${producto.hayStock ? `
+                      <input type="number" min="1" value="1" class="cantidad-producto" 
+                             data-id="${producto.id}" 
+                             onchange="actualizarPrecio(this, ${producto.precio}, ${producto.precioMayorista || 'null'}, ${producto.cantidadMinimaMayorista || 10})">
+                      <button class="btn-carrito" 
+                              data-id="${producto.id}" 
+                              data-nombre="${producto.nombre}" 
+                              data-precio="${producto.precio}"
+                              data-precio-mayorista="${producto.precioMayorista || ''}"
+                              data-cantidad-minima="${producto.cantidadMinimaMayorista || ''}">
+                        Agregar al carrito
+                      </button>
+                    ` : `<p class="sin-stock">Sin stock</p>`}
+                  </div>
+                </div>
+              `).join('');
+            } else {
+              contenedor.innerHTML = `<p class="sin-productos">Próximamente más productos en ${subcategoria}</p>`;
+            }
+          }
+        });
+        
+        // Agregar event listeners a los botones del carrito
+        agregarEventListenersCarrito();
+        
+      } catch (error) {
+        console.error("Error al cargar productos:", error);
+      }
+    }
+
+    // Función para actualizar visualización de precio según cantidad
+    function actualizarPrecio(input, precioMinorista, precioMayorista, cantidadMinima) {
+      if (!precioMayorista) return;
+      
+      const cantidad = parseInt(input.value);
+      const contenedorPrecio = input.closest('.info-producto').querySelector('.precios-container');
+      const mensajeMayorista = contenedorPrecio.querySelector('.info-mayorista');
+      
+      if (cantidad >= cantidadMinima && mensajeMayorista) {
+        mensajeMayorista.style.display = 'block';
+        mensajeMayorista.innerHTML = `✅ ¡Perfecto! Estás comprando al precio mayorista: $${precioMayorista} por unidad`;
+        mensajeMayorista.style.backgroundColor = '#e8f5e8';
+        mensajeMayorista.style.borderLeftColor = '#28a745';
+      } else if (mensajeMayorista) {
+        mensajeMayorista.style.display = 'block';
+        mensajeMayorista.innerHTML = `💡 Llevando ${cantidadMinima} unidades o más, el precio por unidad baja a $${precioMayorista}`;
+        mensajeMayorista.style.backgroundColor = '#f8f9fa';
+        mensajeMayorista.style.borderLeftColor = '#27ae60';
+      }
+    }
+
+    // Función para agregar event listeners a los botones del carrito
+    function agregarEventListenersCarrito() {
+      document.querySelectorAll('.btn-carrito').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = this.dataset.id;
+          const nombre = this.dataset.nombre;
+          const precio = parseFloat(this.dataset.precio);
+          const precioMayorista = this.dataset.precioMayorista ? parseFloat(this.dataset.precioMayorista) : null;
+          const cantidadMinima = this.dataset.cantidadMinima ? parseInt(this.dataset.cantidadMinima) : null;
+          
+          const cantidadInput = document.querySelector(`.cantidad-producto[data-id="${id}"]`);
+          const cantidad = cantidadInput ? parseInt(cantidadInput.value) : 1;
+          
+          // Determinar qué precio usar según la cantidad
+          let precioFinal = precio;
+          if (precioMayorista && cantidadMinima && cantidad >= cantidadMinima) {
+            precioFinal = precioMayorista;
+          }
+          
+          // Agregar al carrito
+          agregarAlCarrito({
+            id,
+            nombre,
+            precio: precioFinal,
+            cantidad,
+            precioUnitarioOriginal: precio,
+            precioMayorista,
+            cantidadMinimaMayorista: cantidadMinima
+          });
+        });
+      });
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', cargarProductosGomaEva);
+  </script>
+</body>
+</html>
