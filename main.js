@@ -490,38 +490,55 @@ if (productosContainer) {
     }
 
     // Editar
-    if (e.target.classList.contains("edit-btn")) {
-      const snap = await getDoc(doc(db, "productos", id));
-      const data = snap.data();
+if (e.target.classList.contains("edit-btn")) {
+  const snap = await getDoc(doc(db, "productos", id));
+  const data = snap.data();
 
-      productIdInput.value = id;
-      document.getElementById("nombre").value = data.nombre;
-      document.getElementById("precio").value = data.precio;
-      document.getElementById("hayStock").checked = data.hayStock ?? true;
+  productIdInput.value = id;
+  document.getElementById("nombre").value = data.nombre;
+  document.getElementById("precio").value = data.precio;
+  document.getElementById("hayStock").checked = data.hayStock ?? true;
 
-      // Precargar múltiples categorías
-      categoriasSelect.querySelectorAll("option").forEach(opt => {
-        opt.selected = Array.isArray(data.categorias)
-          ? data.categorias.includes(opt.value)
-          : false;
-      });
+  // ✅ NUEVO: Cargar datos de precio mayorista si existen
+  const tienePrecioMayorista = data.precioMayorista && data.cantidadMinimaMayorista;
+  
+  if (tienePrecioMayorista) {
+    // Marcar el checkbox y mostrar los campos
+    document.getElementById("habilitarMayorista").checked = true;
+    document.getElementById("campoPrecioMayorista").style.display = "block";
+    
+    // Llenar los valores
+    document.getElementById("precioMayorista").value = data.precioMayorista;
+    document.getElementById("cantidadMinimaMayorista").value = data.cantidadMinimaMayorista;
+  } else {
+    // Asegurarse de que esté desmarcado si no tiene
+    document.getElementById("habilitarMayorista").checked = false;
+    document.getElementById("campoPrecioMayorista").style.display = "none";
+  }
 
-      submitBtn.textContent = "Guardar cambios";
-      
-      // ✅ NUEVO: Guardar la URL de la imagen actual para no pedirla de nuevo
-      document.getElementById("imagen").dataset.currentImage = data.imagen;
-      
-      // ✅ Mostrar vista previa de la imagen actual
-      const vistaPrevia = document.getElementById("vista-previa");
-      const vistaPreviaImg = document.getElementById("vista-previa-img");
-      if (vistaPrevia && vistaPreviaImg && data.imagen) {
-        vistaPreviaImg.src = data.imagen;
-        vistaPrevia.style.display = "block";
-      }
-      
-      // ✅ Actualizar UI para modo edición (imagen opcional)
-      actualizarUIParaEdicion(true);
-    }
+  // Precargar múltiples categorías
+  categoriasSelect.querySelectorAll("option").forEach(opt => {
+    opt.selected = Array.isArray(data.categorias)
+      ? data.categorias.includes(opt.value)
+      : false;
+  });
+
+  submitBtn.textContent = "Guardar cambios";
+  
+  // ✅ Guardar la URL de la imagen actual para no pedirla de nuevo
+  document.getElementById("imagen").dataset.currentImage = data.imagen;
+  
+  // ✅ Mostrar vista previa de la imagen actual
+  const vistaPrevia = document.getElementById("vista-previa");
+  const vistaPreviaImg = document.getElementById("vista-previa-img");
+  if (vistaPrevia && vistaPreviaImg && data.imagen) {
+    vistaPreviaImg.src = data.imagen;
+    vistaPrevia.style.display = "block";
+  }
+  
+  // ✅ Actualizar UI para modo edición (imagen opcional)
+  actualizarUIParaEdicion(true);
+}
   });
 }
 
@@ -580,17 +597,21 @@ if (productoForm) {
         parseInt(document.getElementById("cantidadMinimaMayorista").value) : null;
 
       // Validaciones mayorista
-      if (habilitarMayorista) {
-        if (!precioMayorista || isNaN(precioMayorista)) {
-          throw new Error("Ingresa un precio mayorista válido");
-        }
-        if (precioMayorista >= precio) {
-          throw new Error("El precio mayorista debe ser menor al precio normal");
-        }
-        if (!cantidadMinimaMayorista || cantidadMinimaMayorista < 2) {
-          throw new Error("La cantidad mínima mayorista debe ser al menos 2 unidades");
-        }
-      }
+  if (habilitarMayorista) {
+    if (!precioMayorista || isNaN(precioMayorista)) {
+    throw new Error("Ingresa un precio mayorista válido");
+  }
+    if (precioMayorista >= precio) {
+    throw new Error("El precio mayorista debe ser menor al precio normal");
+  }
+    if (!cantidadMinimaMayorista || cantidadMinimaMayorista < 2) {
+    throw new Error("La cantidad mínima mayorista debe ser al menos 2 unidades");
+  }
+}   else {
+  // ✅ NUEVO: Asegurarse de limpiar estos campos si no está habilitado
+  payload.precioMayorista = null;
+  payload.cantidadMinimaMayorista = null;
+}
 
       const payload = { 
         nombre, 
