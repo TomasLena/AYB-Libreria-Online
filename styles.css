@@ -62,11 +62,28 @@ nav.ayb-menu-secundario ul li a:hover {
   font-weight: bold;
 }
 
-.ayb-social-cart a img {
-  width: 24px;
-  margin-left: 10px;
+.ayb-social-cart {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
+.ayb-social-cart a {
+  font-size: 24px;
+  color: #555; /* Gris suave para estilo minimalista */
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.ayb-social-cart a:hover {
+  color: #000; /* Negro al pasar el mouse */
+  transform: scale(1.1);
+}
+
+/* Colores suaves y modernos (opcional) */
+.ayb-social-cart .bi-facebook { color: #ffffff; }
+.ayb-social-cart .bi-instagram { color: #ffffff; }
+.ayb-social-cart .bi-cart { color: #ffffff; }
 .logo img {
   height: 90px;
   width: 90px;
@@ -93,7 +110,164 @@ nav.ayb-menu-secundario {
 
 
 }
+/* 🎨 Estilos para la sección "¿Cómo comprar?" */
 
+.como-comprar {
+  background-color: #f8f9fa;
+  padding: 60px 20px;
+  margin: 40px 0;
+}
+
+.container-como-comprar {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.titulo-como-comprar {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 50px;
+}
+
+.titulo-como-comprar i {
+  margin-right: 10px;
+}
+
+.pasos-compra {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.paso {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-left: 4px solid #3498db;
+  transition: transform 0.2s ease;
+}
+
+.paso:hover {
+  transform: translateY(-3px);
+}
+
+.numero-paso {
+  background: #3498db;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.contenido-paso h3 {
+  color: #2c3e50;
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contenido-paso h3 i {
+  color: #3498db;
+  font-size: 1.4rem;
+}
+
+.contenido-paso p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.contenido-paso ul {
+  padding-left: 20px;
+  color: #555;
+}
+
+.contenido-paso ul li {
+  margin-bottom: 5px;
+}
+
+.cta-whatsapp {
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  border-radius: 16px;
+  color: white;
+  margin-top: 30px;
+}
+
+.cta-whatsapp h3 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+.cta-whatsapp p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-whatsapp {
+  display: inline-block;
+  background: white;
+  color: #128C7E;
+  padding: 15px 35px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-whatsapp:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.btn-whatsapp i {
+  margin-right: 8px;
+  font-size: 1.3rem;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .titulo-como-comprar {
+    font-size: 1.6rem;
+  }
+
+  .paso {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 25px;
+  }
+
+  .contenido-paso h3 {
+    font-size: 1.2rem;
+  }
+
+  .btn-whatsapp {
+    padding: 14px 28px;
+    font-size: 1rem;
+  }
+}
 
 
 
@@ -226,27 +400,47 @@ nav.ayb-menu-secundario ul li ul.submenu li a:hover {
 }
 
 
-
-
-
-
-
-
-
-
+/* 🔷 BANNER PRINCIPAL - PEGADO AL SUBMENÚ */
 .banner-principal {
-  max-width: 1200px; /* Ajustá este valor según lo que te parezca cómodo */
-  margin: 0 auto;    /* Centra el banner horizontalmente */
-  padding: 20px 0;   /* Espacio arriba y abajo */
+  width: 100%;
+  margin-top: 0;
+  overflow: hidden;
+  position: relative;
+  max-height: 70vh; /* Limita la altura máxima al 70% del viewport */
+  background-color: #f0f0f0; /* Color de fondo si la imagen tarda en cargar */
 }
 
 .banner-principal img {
   width: 100%;
-  height: auto;
-  display: block;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px; /* Opcional: bordes redondeados para un toque estético */
+  object-position: center center; /* Enfoca el centro de la imagen */
+  display: block;
 }
+
+/* Media query para pantallas grandes */
+@media (min-width: 1200px) {
+  .banner-principal {
+    max-height: 500px; /* Altura fija máxima en pantallas grandes */
+  }
+  
+  .banner-principal img {
+    object-position: center 25%; /* Ajusta el enfoque (25% desde arriba) */
+  }
+}
+
+/* Ajustes para móviles */
+@media (max-width: 768px) {
+  .banner-principal {
+    max-height: 50vh; /* Altura menor en móviles */
+  }
+}
+
+
+
+
+
+
 
 
 
