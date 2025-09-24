@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Papelería - ayb.libreria</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="styles.css">
 
   <!-- ✅ AGREGAR ESTO: Cargar jsPDF primero -->
@@ -36,12 +37,17 @@
       </ul>
     </nav>
 
-    <div class="ayb-social-cart">
-      <a href="#"><img src="facebook-icon.png" alt="Facebook"></a>
-      <a href="#"><img src="instagram-icon.png" alt="Instagram"></a>
-      <a href="#" onclick="mostrarCarrito()"><img src="cart-icon.png" alt="Carrito"></a>
-      <span id="contadorCarrito" class="contador-carrito">0</span>
-    </div>
+      <div class="ayb-social-cart">
+  <a href="https://www.facebook.com/share/16zETBk27d/" target="_blank" aria-label="Facebook">
+    <i class="bi bi-facebook"></i>
+  </a>
+  <a href="https://www.instagram.com/ayb.libreria?igsh=MXR0enk3YnJsOGxxZg==" target="_blank" aria-label="Instagram">
+    <i class="bi bi-instagram"></i>
+  </a>
+  <a href="/carrito" aria-label="Carrito">
+    <i class="bi bi-cart"></i>
+  </a>
+  </div>
   </header>
 
   <!-- 🔹 MENÚ SECUNDARIO -->
@@ -56,6 +62,8 @@
       <li><a href="#seda">Papel Seda/Barrilete</a></li>
       <li><a href="#taco-color">Taco Color</a></li>
       <li><a href="#folios">Folios</a></li>
+      <li><a href="#papel-contact">Papel Contact</a></li>
+
     </ul>
   </nav>
 
@@ -137,7 +145,16 @@
         <!-- Los productos se cargarán dinámicamente -->
       </div>
     </section>
+    <section id="papel-contact" class="carrusel-bloque">
+    <h3>📦 Papel Contact</h3>
+    <div id="carrusel-papel-contact" class="carrusel">
+        <!-- Los productos se cargarán dinámicamente -->
+    </div>
+    </section>
+  
   </main>
+
+
 
   <!-- Modal del carrito (debe estar en cada página) -->
   <div id="carritoModal" class="carrito-modal oculto" onclick="if(event.target===this) cerrarCarrito()">
@@ -177,7 +194,7 @@
     const SUBCATEGORIAS_PAPELERIA = [
       "resmas", "cintas", "bolsitas candybar", "cartulinas", 
       "papel crepe", "papel fotográfico", "papel seda/barrilete", 
-      "taco color", "folios"
+      "taco color", "folios", "papel contact"
     ];
 
     // Cargar productos de papelería

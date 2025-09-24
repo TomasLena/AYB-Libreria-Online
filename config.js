@@ -26,7 +26,8 @@ export const CATEGORIES = [
         "papel fotográfico",
         "papel seda/barrilete",
         "taco color",
-        "folios"
+        "folios",
+        "papel contact"
     ]
     },
     {
@@ -51,7 +52,8 @@ export const CATEGORIES = [
         "lapiceras",
         "sacapuntas",
         "taco color",
-        "folios"
+        "folios",
+        "resaltadores"
         ]
   },
   {
@@ -66,7 +68,8 @@ export const CATEGORIES = [
         "pegamento multiuso",
         "silicona en barra",
         "silicona líquida",
-        "viruta"
+        "viruta",
+        "tempera"
     ]
     },
     {
