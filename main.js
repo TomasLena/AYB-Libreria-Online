@@ -607,11 +607,7 @@ if (productoForm) {
     if (!cantidadMinimaMayorista || cantidadMinimaMayorista < 2) {
     throw new Error("La cantidad mínima mayorista debe ser al menos 2 unidades");
   }
-}   else {
-  // ✅ NUEVO: Asegurarse de limpiar estos campos si no está habilitado
-  payload.precioMayorista = null;
-  payload.cantidadMinimaMayorista = null;
-}
+}   
 
       const payload = { 
         nombre, 
